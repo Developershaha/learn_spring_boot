@@ -1,15 +1,22 @@
+
 package com.learnspringboot.service;
 
-import com.learnspringboot.entity.Student;
+import com.learnspringboot.dto.StudentRequestDto;
+import com.learnspringboot.dto.StudentResponseDto;
 
 import java.util.List;
 
 public interface StudentService {
-    Student saveStudent(Student student);
-    List<Student> getAllStudent();
-    Student getStudentById(Long id);
-    void deleteStudent(Long id);
-    Student updateStudent(Long id,Student student);
-    Student patchStudent(Long id,Student student);
 
+    StudentResponseDto saveStudent(StudentRequestDto dto);
+
+    List<StudentResponseDto> getAllStudent();
+
+    StudentResponseDto getStudentById(Long id);
+
+    void deleteStudent(Long id);
+
+    StudentResponseDto updateStudent(Long id, StudentRequestDto dto);
+
+    StudentResponseDto patchStudent(Long id, StudentRequestDto dto);
 }
