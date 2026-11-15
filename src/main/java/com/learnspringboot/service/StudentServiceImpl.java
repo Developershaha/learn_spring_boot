@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class StudentServiceImpl implements StudentService{
+public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
@@ -33,5 +33,33 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
+    }
+
+    @Override
+    public Student updateStudent(Long id, Student student) {
+        Student exitingStudent = studentRepository.findById(id).orElse(null);
+        if (exitingStudent != null) {
+            exitingStudent.setFirstName(student.getFirstName());
+            exitingStudent.setLastName(student.getLastName());
+            exitingStudent.setEmail(student.getEmail());
+            exitingStudent.setCourse(student.getCourse());
+            return studentRepository.save(exitingStudent);
+
+        }
+        return null;
+    }
+
+    @Override
+    public Student patchStudent(Long id, Student student) {
+        Student exitingStudent = studentRepository.findById(id).orElse(null);
+        if (exitingStudent != null) {
+            if (exitingStudent.getFirstName() != null) exitingStudent.setFirstName(student.getFirstName());
+            if (exitingStudent.getLastName() != null) exitingStudent.setLastName(student.getLastName());
+            if (exitingStudent.getEmail() != null) exitingStudent.setEmail(student.getEmail());
+            if (exitingStudent.getCourse() != null) exitingStudent.setCourse(student.getCourse());
+            return studentRepository.save(exitingStudent);
+
+        }
+        return null;
     }
 }
