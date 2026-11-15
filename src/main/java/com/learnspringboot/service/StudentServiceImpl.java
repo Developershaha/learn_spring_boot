@@ -53,10 +53,10 @@ public class StudentServiceImpl implements StudentService {
     public Student patchStudent(Long id, Student student) {
         Student exitingStudent = studentRepository.findById(id).orElse(null);
         if (exitingStudent != null) {
-            if (exitingStudent.getFirstName() != null) exitingStudent.setFirstName(student.getFirstName());
-            if (exitingStudent.getLastName() != null) exitingStudent.setLastName(student.getLastName());
-            if (exitingStudent.getEmail() != null) exitingStudent.setEmail(student.getEmail());
-            if (exitingStudent.getCourse() != null) exitingStudent.setCourse(student.getCourse());
+            if (student.getFirstName() != null) exitingStudent.setFirstName(student.getFirstName());
+            if (student.getLastName() != null) exitingStudent.setLastName(student.getLastName());
+            if (student.getEmail() != null) exitingStudent.setEmail(student.getEmail());
+            if (student.getCourse() != null) exitingStudent.setCourse(student.getCourse());
             return studentRepository.save(exitingStudent);
 
         }
