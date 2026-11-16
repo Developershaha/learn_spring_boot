@@ -13,6 +13,13 @@ import java.util.List;
 @Service
 public class StudentServiceImpl implements StudentService {
 
+    // we can apply validation on three types
+
+    // 1) client validation server validation and database validation we can apply validation on three layer
+    // server side validation bean validation before data saved in the database oky
+
+    // first add dependency oky then work on this
+
     private final StudentRepository studentRepository;
 
     // Constructor injection
