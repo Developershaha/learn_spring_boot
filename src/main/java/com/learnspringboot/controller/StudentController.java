@@ -4,6 +4,7 @@ package com.learnspringboot.controller;
 import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
 import com.learnspringboot.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,14 +39,18 @@ public class StudentController {
     @GetMapping("/{id}")
     public ResponseEntity<StudentResponseDto> getStudentById(
             @PathVariable Long id) {
+        StudentResponseDto student = studentService.getStudentById(id);
+        if (student == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-        return ResponseEntity.ok(studentService.getStudentById(id));
+        return ResponseEntity.ok(student);
     }
 
     // CREATE STUDENT
     @PostMapping
-    public ResponseEntity<StudentResponseDto> saveStudent(
-            @RequestBody StudentRequestDto dto) {
+    public ResponseEntity<StudentResponseDto> saveStudent(@Valid
+                                                          @RequestBody StudentRequestDto dto) {
 
         StudentResponseDto response = studentService.saveStudent(dto);
 
@@ -56,12 +61,13 @@ public class StudentController {
     @PutMapping("/{id}")
     public ResponseEntity<StudentResponseDto> updateStudent(
             @PathVariable Long id,
+            @Valid
             @RequestBody StudentRequestDto dto) {
 
         return ResponseEntity.ok(studentService.updateStudent(id, dto));
     }
 
-    // PARTIAL UPDATE (PATCH)
+    // PARTIAL UPDATE (PATCH) - no need to apply valid here
     @PatchMapping("/{id}")
     public ResponseEntity<StudentResponseDto> patchStudent(
             @PathVariable Long id,
