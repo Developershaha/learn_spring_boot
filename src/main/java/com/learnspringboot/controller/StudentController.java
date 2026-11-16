@@ -25,6 +25,12 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List<StudentResponseDto>> getAllStudent() {
 
+        // responseEntity its is a wrapper class oky ResponseEntity.ok( 201 created 200 found 404 not found 400 bad request  500 internal error
+
+        // 3xx redirection messages
+        // 4xx client error
+        // 5xx server error
+
         return ResponseEntity.ok(studentService.getAllStudent());
     }
 
