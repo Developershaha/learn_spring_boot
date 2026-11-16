@@ -7,6 +7,7 @@ import com.learnspringboot.entity.Student;
 import com.learnspringboot.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,7 +30,8 @@ public class StudentServiceImpl implements StudentService {
         student.setLastName(dto.getLastName());
         student.setEmail(dto.getEmail());
         student.setCourse(dto.getCourse());
-
+        student.setPassword(dto.getPassword());
+        student.setCreatedAt(LocalDateTime.now());
         Student savedStudent = studentRepository.save(student);
 
         return mapToResponseDto(savedStudent);
@@ -79,7 +81,8 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setLastName(dto.getLastName());
         existingStudent.setEmail(dto.getEmail());
         existingStudent.setCourse(dto.getCourse());
-
+        existingStudent.setPassword(dto.getPassword());
+        existingStudent.setCreatedAt(LocalDateTime.now());
         Student updatedStudent = studentRepository.save(existingStudent);
 
         return mapToResponseDto(updatedStudent);
@@ -108,6 +111,10 @@ public class StudentServiceImpl implements StudentService {
         if (dto.getCourse() != null) {
             existingStudent.setCourse(dto.getCourse());
         }
+        if (dto.getPassword() != null) {
+            existingStudent.setCourse(dto.getPassword());
+        }
+
 
         Student updatedStudent = studentRepository.save(existingStudent);
 

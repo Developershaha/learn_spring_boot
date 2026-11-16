@@ -26,7 +26,7 @@ public class Student {
 
     //dto transfer only required data oky no need to show all the data
 
-    // entity used for database operation data base model
+    // entity used for database operation database model
     // dto used for api communication model api model
     private String password;
     private LocalDateTime createdAt;

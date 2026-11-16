@@ -13,4 +13,5 @@ public class StudentRequestDto {
     private String lastName;
     private String email;
     private String course;
+    private String password;
 }
