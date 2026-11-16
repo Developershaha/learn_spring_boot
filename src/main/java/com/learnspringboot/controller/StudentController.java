@@ -31,6 +31,10 @@ public class StudentController {
         // 3xx redirection messages
         // 4xx client error
         // 5xx server error
+        // we will learn exception and custom exception oky
+
+        // what is exception - exception unexcepted program during program execution
+
 
         return ResponseEntity.ok(studentService.getAllStudent());
     }
@@ -40,10 +44,6 @@ public class StudentController {
     public ResponseEntity<StudentResponseDto> getStudentById(
             @PathVariable Long id) {
         StudentResponseDto student = studentService.getStudentById(id);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         return ResponseEntity.ok(student);
     }
 
@@ -65,9 +65,6 @@ public class StudentController {
             @RequestBody StudentRequestDto dto) {
 
         StudentResponseDto student = studentService.updateStudent(id, dto);
-        if(student==null){
-            ResponseEntity.notFound().build();
-        }
 
         return ResponseEntity.ok(student);
     }

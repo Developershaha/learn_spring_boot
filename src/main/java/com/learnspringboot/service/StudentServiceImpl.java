@@ -4,6 +4,8 @@ package com.learnspringboot.service;
 import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
 import com.learnspringboot.entity.Student;
+import com.learnspringboot.exception.DuplicateEmailException;
+import com.learnspringboot.exception.StudentNotFoundException;
 import com.learnspringboot.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,9 @@ public class StudentServiceImpl implements StudentService {
     // CREATE STUDENT
     @Override
     public StudentResponseDto saveStudent(StudentRequestDto dto) {
+        if(studentRepository.existsByEmail(dto.getEmail())){
+            throw new DuplicateEmailException("Student already exist with email "+dto.getEmail());
+        }
 
         Student student = new Student();
 
@@ -61,7 +66,6 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Student not found with id: " + id));
-
         return mapToResponseDto(student);
     }
 
@@ -71,7 +75,7 @@ public class StudentServiceImpl implements StudentService {
 
         Student student = studentRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Student not found with id: " + id));
+                        new StudentNotFoundException("Student not found with id: " + id));
 
         studentRepository.delete(student);
     }
@@ -82,7 +86,12 @@ public class StudentServiceImpl implements StudentService {
 
         Student existingStudent = studentRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Student not found with id: " + id));
+                        new StudentNotFoundException("Student not found with id: " + id));
+
+        // duplicate email check
+        if(studentRepository.existsByEmail(dto.getEmail()) && !existingStudent.getEmail().equals(dto.getEmail())){
+            throw new DuplicateEmailException("student already exist with email "+dto.getEmail());
+        }
 
         existingStudent.setFirstName(dto.getFirstName());
         existingStudent.setLastName(dto.getLastName());
@@ -101,7 +110,7 @@ public class StudentServiceImpl implements StudentService {
 
         Student existingStudent = studentRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Student not found with id: " + id));
+                        new StudentNotFoundException("Student not found with id: " + id));
 
         if (dto.getFirstName() != null) {
             existingStudent.setFirstName(dto.getFirstName());
@@ -112,6 +121,9 @@ public class StudentServiceImpl implements StudentService {
         }
 
         if (dto.getEmail() != null) {
+            if(studentRepository.existsByEmail(dto.getEmail()) && !existingStudent.getEmail().equals(dto.getEmail())){
+                throw new DuplicateEmailException("student already exist with email "+dto.getEmail());
+            }
             existingStudent.setEmail(dto.getEmail());
         }
 
