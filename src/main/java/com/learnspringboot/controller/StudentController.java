@@ -64,7 +64,12 @@ public class StudentController {
             @Valid
             @RequestBody StudentRequestDto dto) {
 
-        return ResponseEntity.ok(studentService.updateStudent(id, dto));
+        StudentResponseDto student = studentService.updateStudent(id, dto);
+        if(student==null){
+            ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(student);
     }
 
     // PARTIAL UPDATE (PATCH) - no need to apply valid here
