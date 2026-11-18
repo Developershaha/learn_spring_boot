@@ -3,12 +3,14 @@ package com.learnspringboot.controller;
 
 import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
+import com.learnspringboot.payload.ApiResponse;
 import com.learnspringboot.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -24,7 +26,14 @@ public class StudentController {
 
     // GET ALL STUDENTS
     @GetMapping
-    public ResponseEntity<List<StudentResponseDto>> getAllStudent() {
+    public ResponseEntity<ApiResponse<List<StudentResponseDto>>> getAllStudent() {
+        List<StudentResponseDto> students=studentService.getAllStudent();
+        ApiResponse<List<StudentResponseDto>> response=new ApiResponse<>(
+                LocalDateTime.now(),
+                HttpStatus.OK.value(),
+                "Student fetched successfully",
+                students
+        );
 
         // responseEntity its is a wrapper class oky ResponseEntity.ok( 201 created 200 found 404 not found 400 bad request  500 internal error
 
@@ -35,8 +44,7 @@ public class StudentController {
 
         // what is exception - exception unexcepted program during program execution
 
-
-        return ResponseEntity.ok(studentService.getAllStudent());
+        return ResponseEntity.ok(response);
     }
 
     // GET STUDENT BY ID
