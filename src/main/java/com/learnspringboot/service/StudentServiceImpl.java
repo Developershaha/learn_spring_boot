@@ -29,26 +29,35 @@ public class StudentServiceImpl implements StudentService {
         this.studentRepository = studentRepository;
     }
 
-    // CREATE STUDENT
     @Override
     public StudentResponseDto saveStudent(StudentRequestDto dto) {
-        if(studentRepository.existsByEmail(dto.getEmail())){
-            throw new DuplicateEmailException("Student already exist with email "+dto.getEmail());
+
+        String email = dto.getEmail().trim().toLowerCase();
+
+        System.out.println("Incoming Email: " + email);
+
+        boolean emailExists = studentRepository.existsByEmail(email);
+
+        System.out.println("Email Exists: " + emailExists);
+
+        if (emailExists) {
+            throw new DuplicateEmailException(
+                    "Student already exists with email: " + email
+            );
         }
 
         Student student = new Student();
-
         student.setFirstName(dto.getFirstName());
         student.setLastName(dto.getLastName());
-        student.setEmail(dto.getEmail());
+        student.setEmail(email);
         student.setCourse(dto.getCourse());
         student.setPassword(dto.getPassword());
         student.setCreatedAt(LocalDateTime.now());
+
         Student savedStudent = studentRepository.save(student);
 
         return mapToResponseDto(savedStudent);
     }
-
     // GET ALL STUDENTS
     @Override
     public List<StudentResponseDto> getAllStudent() {
@@ -65,7 +74,7 @@ public class StudentServiceImpl implements StudentService {
 
         Student student = studentRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Student not found with id: " + id));
+                        new StudentNotFoundException("Student not found with id: " + id));
         return mapToResponseDto(student);
     }
 
@@ -131,7 +140,7 @@ public class StudentServiceImpl implements StudentService {
             existingStudent.setCourse(dto.getCourse());
         }
         if (dto.getPassword() != null) {
-            existingStudent.setCourse(dto.getPassword());
+            existingStudent.setPassword(dto.getPassword());
         }
 
 

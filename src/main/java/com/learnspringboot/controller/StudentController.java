@@ -51,6 +51,8 @@ public class StudentController {
     @PostMapping
     public ResponseEntity<StudentResponseDto> saveStudent(@Valid
                                                           @RequestBody StudentRequestDto dto) {
+        System.out.println("POST API CALLED");
+
 
         StudentResponseDto response = studentService.saveStudent(dto);
 
