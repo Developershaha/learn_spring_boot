@@ -1,10 +1,12 @@
+
 package com.learnspringboot.exception;
 
-import com.learnspringboot.payload.ErrorResponse;
-import jakarta.servlet.http.HttpServlet;
+import com.learnspringboot.payload.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,37 +18,43 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // STUDENT NOT FOUND - 404
     @ExceptionHandler(StudentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleStudentNotFoundException(
+    public ResponseEntity<ApiResponse<Void>> handleStudentNotFoundException(
             StudentNotFoundException ex,
             HttpServletRequest request) {
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        ApiResponse<Void> response = new ApiResponse<>(
+                false,
                 LocalDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
                 ex.getMessage(),
-                request.getRequestURI()
+                null
         );
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(errorResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    // DUPLICATE EMAIL - 409
     @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateEmailException(DuplicateEmailException ex, HttpServletRequest request){
-        ErrorResponse errorResponse = new ErrorResponse(
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateEmailException(
+            DuplicateEmailException ex,
+            HttpServletRequest request) {
+
+        ApiResponse<Void> response = new ApiResponse<>(
+                false,
                 LocalDateTime.now(),
                 HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
                 ex.getMessage(),
-                request.getRequestURI()
+                null
         );
-        return new ResponseEntity<>(errorResponse,HttpStatus.CONFLICT);
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
-    // field validation default exception return oky
+    // FIELD VALIDATION - 400
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationException(
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationException(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
 
@@ -61,17 +69,31 @@ public class GlobalExceptionHandler {
                     );
                 });
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        ApiResponse<Map<String, String>> response = new ApiResponse<>(
+                false,
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                errors.toString(),
-                request.getRequestURI()
+                "Validation failed",
+                errors
         );
 
-//        return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    // INVALID JSON - 400
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidJson(
+            HttpMessageNotReadableException ex,
+            HttpServletRequest request) {
+
+        ApiResponse<Void> response = new ApiResponse<>(
+                false,
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid request body. Please check your JSON format.",
+                null
+        );
+
+        return ResponseEntity.badRequest().body(response);
+    }
 }

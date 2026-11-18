@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiResponse <T>{ // used generic type T any data we can send in this class any data type we can send oky
+    private boolean success;
     private LocalDateTime timestamp;
     private int status;
     private String message;

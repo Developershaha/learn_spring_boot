@@ -5,6 +5,7 @@ import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
 import com.learnspringboot.payload.ApiResponse;
 import com.learnspringboot.service.StudentService;
+
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,6 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    // Constructor injection
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
@@ -27,73 +27,120 @@ public class StudentController {
     // GET ALL STUDENTS
     @GetMapping
     public ResponseEntity<ApiResponse<List<StudentResponseDto>>> getAllStudent() {
-        List<StudentResponseDto> students=studentService.getAllStudent();
-        ApiResponse<List<StudentResponseDto>> response=new ApiResponse<>(
-                LocalDateTime.now(),
-                HttpStatus.OK.value(),
-                "Student fetched successfully",
-                students
-        );
 
-        // responseEntity its is a wrapper class oky ResponseEntity.ok( 201 created 200 found 404 not found 400 bad request  500 internal error
+        List<StudentResponseDto> students =
+                studentService.getAllStudent();
 
-        // 3xx redirection messages
-        // 4xx client error
-        // 5xx server error
-        // we will learn exception and custom exception oky
-
-        // what is exception - exception unexcepted program during program execution
+        ApiResponse<List<StudentResponseDto>> response =
+                new ApiResponse<>(
+                        true,
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Students fetched successfully",
+                        students
+                );
 
         return ResponseEntity.ok(response);
     }
 
     // GET STUDENT BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<StudentResponseDto> getStudentById(
+    public ResponseEntity<ApiResponse<StudentResponseDto>> getStudentById(
             @PathVariable Long id) {
-        StudentResponseDto student = studentService.getStudentById(id);
-        return ResponseEntity.ok(student);
+
+        StudentResponseDto student =
+                studentService.getStudentById(id);
+
+        ApiResponse<StudentResponseDto> response =
+                new ApiResponse<>(
+                        true,
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Student fetched successfully",
+                        student
+                );
+
+        return ResponseEntity.ok(response);
     }
 
     // CREATE STUDENT
     @PostMapping
-    public ResponseEntity<StudentResponseDto> saveStudent(@Valid
-                                                          @RequestBody StudentRequestDto dto) {
-        System.out.println("POST API CALLED");
+    public ResponseEntity<ApiResponse<StudentResponseDto>> saveStudent(
+            @Valid @RequestBody StudentRequestDto dto) {
 
+        StudentResponseDto student =
+                studentService.saveStudent(dto);
 
-        StudentResponseDto response = studentService.saveStudent(dto);
+        ApiResponse<StudentResponseDto> response =
+                new ApiResponse<>(
+                        true,
+                        LocalDateTime.now(),
+                        HttpStatus.CREATED.value(),
+                        "Student created successfully",
+                        student
+                );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // FULL UPDATE (PUT)
     @PutMapping("/{id}")
-    public ResponseEntity<StudentResponseDto> updateStudent(
+    public ResponseEntity<ApiResponse<StudentResponseDto>> updateStudent(
             @PathVariable Long id,
-            @Valid
-            @RequestBody StudentRequestDto dto) {
+            @Valid @RequestBody StudentRequestDto dto) {
 
-        StudentResponseDto student = studentService.updateStudent(id, dto);
+        StudentResponseDto student =
+                studentService.updateStudent(id, dto);
 
-        return ResponseEntity.ok(student);
+        ApiResponse<StudentResponseDto> response =
+                new ApiResponse<>(
+                        true,
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Student updated successfully",
+                        student
+                );
+
+        return ResponseEntity.ok(response);
     }
 
-    // PARTIAL UPDATE (PATCH) - no need to apply valid here
+    // PARTIAL UPDATE (PATCH)
     @PatchMapping("/{id}")
-    public ResponseEntity<StudentResponseDto> patchStudent(
+    public ResponseEntity<ApiResponse<StudentResponseDto>> patchStudent(
             @PathVariable Long id,
             @RequestBody StudentRequestDto dto) {
 
-        return ResponseEntity.ok(studentService.patchStudent(id, dto));
+        StudentResponseDto student =
+                studentService.patchStudent(id, dto);
+
+        ApiResponse<StudentResponseDto> response =
+                new ApiResponse<>(
+                        true,
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Student partially updated successfully",
+                        student
+                );
+
+        return ResponseEntity.ok(response);
     }
 
     // DELETE STUDENT
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteStudent(
+            @PathVariable Long id) {
 
         studentService.deleteStudent(id);
 
-        return ResponseEntity.noContent().build();
+        ApiResponse<Void> response =
+                new ApiResponse<>(
+                        true,
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Student deleted successfully",
+                        null
+                );
+
+        return ResponseEntity.ok(response);
     }
 }
