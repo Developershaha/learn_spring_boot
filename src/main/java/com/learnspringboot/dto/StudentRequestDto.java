@@ -33,4 +33,5 @@ public class StudentRequestDto {
             message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
     )
     private String password;
+    private AddressRequestDTO address;
 }
