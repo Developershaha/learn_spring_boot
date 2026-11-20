@@ -112,7 +112,7 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setCourse(dto.getCourse());
         existingStudent.setPassword(dto.getPassword());
 
-        Address address = existingStudent.getAddress()
+        Address address = existingStudent.getAddress();
         if (address == null) {
             address = new Address();
         }
