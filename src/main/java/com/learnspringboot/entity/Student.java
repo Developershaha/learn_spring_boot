@@ -34,14 +34,14 @@ public class Student {
     // establish relationship between two tables oky address class and working ORM mapping
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER , orphanRemoval = true) // we can establish one direction mean unidirection flow means student understand address
-// PERSIST ,MERGE,REMOVE - deleted operation referesh detach -  - eager by default get all both the table oky
+    // PERSIST ,MERGE,REMOVE - deleted operation referesh detach -  - eager by default get all both the table oky
     // lazy - student fist load address not load oky  unnnessasary remove the record
     // generally we establish unidirection but we can establish bi-direction relationship
     @JoinColumn(name = "address_id") // this annotation defined and establish connection between two tables oky
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id") // we are keeping id in this table because to reduce data redudancy oky
     private Department department;
 
 }
