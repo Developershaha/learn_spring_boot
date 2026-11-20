@@ -1,6 +1,8 @@
 
 package com.learnspringboot.service;
 
+import com.learnspringboot.dto.AddressRequestDTO;
+import com.learnspringboot.dto.AddressResponseDto;
 import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
 import com.learnspringboot.entity.Address;
@@ -156,6 +158,24 @@ public class StudentServiceImpl implements StudentService {
             existingStudent.setPassword(dto.getPassword());
         }
 
+        if (dto.getAddress() != null) {
+            Address address= existingStudent.getAddress();
+            if(address==null){
+                address=new Address();
+            }
+            if(dto.getAddress().getCity()!=null){
+                address.setCity(dto.getAddress().getCity());
+            }
+            if(dto.getAddress().getCountry()!=null){
+                address.setCountry(dto.getAddress().getCountry());
+            }
+            if(dto.getAddress().getState()!=null){
+                address.setState(dto.getAddress().getState());
+            }
+            existingStudent.setAddress(address);
+        }
+
+
 
         Student updatedStudent = studentRepository.save(existingStudent);
 
@@ -172,7 +192,11 @@ public class StudentServiceImpl implements StudentService {
         dto.setLastName(student.getLastName());
         dto.setEmail(student.getEmail());
         dto.setCourse(student.getCourse());
-
+        AddressResponseDto addressDto=new AddressResponseDto();
+        addressDto.setCity(student.getAddress().getCity());
+        addressDto.setCountry(student.getAddress().getCountry());
+        addressDto.setState(student.getAddress().getCountry());
+        dto.setAddress(student.getAddress());
         return dto;
     }
 }
