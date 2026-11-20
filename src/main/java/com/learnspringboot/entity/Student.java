@@ -40,4 +40,8 @@ public class Student {
     @JoinColumn(name = "address_id") // this annotation defined and establish connection between two tables oky
     private Address address;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
 }
