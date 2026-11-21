@@ -7,7 +7,7 @@ import com.learnspringboot.repository.DepartmentRepository;
 import java.util.List;
 
 public interface DepartmentService {
-    DepartmentRepository createDepartment(DepartmentRequestDto requestDto);
+    DepartmentResponseDto createDepartment(DepartmentRequestDto requestDto);
     List<DepartmentResponseDto> getAllDepartment();
     DepartmentResponseDto getDepartmentById(Long id);
 }
