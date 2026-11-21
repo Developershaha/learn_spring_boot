@@ -1,16 +1,15 @@
 
 package com.learnspringboot.service;
 
-import com.learnspringboot.dto.AddressRequestDTO;
-import com.learnspringboot.dto.AddressResponseDto;
-import com.learnspringboot.dto.StudentRequestDto;
-import com.learnspringboot.dto.StudentResponseDto;
+import com.learnspringboot.dto.*;
 import com.learnspringboot.entity.Address;
+import com.learnspringboot.entity.Course;
 import com.learnspringboot.entity.Department;
 import com.learnspringboot.entity.Student;
 import com.learnspringboot.exception.DuplicateEmailException;
 import com.learnspringboot.exception.ResourceNotFoundException;
 import com.learnspringboot.exception.StudentNotFoundException;
+import com.learnspringboot.repository.CourseRepository;
 import com.learnspringboot.repository.DepartmentRepository;
 import com.learnspringboot.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +31,7 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
     private final DepartmentRepository departmentRepository;
-
-    // Constructor injection
-//    public StudentServiceImpl(StudentRepository studentRepository) {
-//        this.studentRepository = studentRepository;
-//    }
+    private final CourseRepository courseRepository;
 
     @Override
     public StudentResponseDto saveStudent(StudentRequestDto dto) {
@@ -61,17 +56,21 @@ public class StudentServiceImpl implements StudentService {
                 new ResourceNotFoundException("Department Not found with id " + dto.getDepartmentId())
         );
 
+        // Course Entity
+
+        List<Course> courses=courseRepository.findAllById(dto.getCourseIds());
+
 
         // student entity
         Student student = new Student();
         student.setFirstName(dto.getFirstName());
         student.setLastName(dto.getLastName());
         student.setEmail(email);
-        student.setCourse(dto.getCourse());
         student.setPassword(dto.getPassword());
         student.setCreatedAt(LocalDateTime.now());
         student.setAddress(address);
         student.setDepartment(department);
+        student.setCourses(courses);
 
         Student savedStudent = studentRepository.save(student);
 
@@ -125,7 +124,6 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setFirstName(dto.getFirstName());
         existingStudent.setLastName(dto.getLastName());
         existingStudent.setEmail(dto.getEmail());
-        existingStudent.setCourse(dto.getCourse());
         existingStudent.setPassword(dto.getPassword());
 
         // address update
@@ -175,9 +173,6 @@ public class StudentServiceImpl implements StudentService {
             existingStudent.setEmail(dto.getEmail());
         }
 
-        if (dto.getCourse() != null) {
-            existingStudent.setCourse(dto.getCourse());
-        }
         if (dto.getPassword() != null) {
             existingStudent.setPassword(dto.getPassword());
         }
@@ -223,13 +218,24 @@ public class StudentServiceImpl implements StudentService {
         dto.setFirstName(student.getFirstName());
         dto.setLastName(student.getLastName());
         dto.setEmail(student.getEmail());
-        dto.setCourse(student.getCourse());
         AddressResponseDto addressDto = new AddressResponseDto();
         addressDto.setCity(student.getAddress().getCity());
         addressDto.setCountry(student.getAddress().getCountry());
         addressDto.setState(student.getAddress().getState() );
         dto.setAddress(addressDto);
         dto.setDepartmentName(student.getDepartment().getDepartmentName());
+        dto.setCourses(
+                student.getCourses()
+                        .stream()
+                        .map(course -> new CourseResponseDto(
+                                course.getId(),
+                                course.getCourseName(),
+                                course.getDuration(),
+                                course.getFees(),
+                                course.getInstructorName()
+                        ))
+                        .toList()
+        );
         return dto;
     }
 }

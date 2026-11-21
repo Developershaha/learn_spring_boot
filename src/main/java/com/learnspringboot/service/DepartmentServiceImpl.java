@@ -1,5 +1,6 @@
 package com.learnspringboot.service;
 
+import com.learnspringboot.dto.CourseResponseDto;
 import com.learnspringboot.dto.DepartmentRequestDto;
 import com.learnspringboot.dto.DepartmentResponseDto;
 import com.learnspringboot.dto.StudentResponseDto;
@@ -54,7 +55,16 @@ public class DepartmentServiceImpl implements DepartmentService{
                     studentDto.setFirstName(student.getFirstName());
                     studentDto.setLastName(student.getLastName());
                     studentDto.setEmail(student.getEmail());
-                    studentDto.setCourse(student.getCourse());
+                    studentDto.setCourses(
+                            student.getCourses()
+                                    .stream()
+                                    .map((course -> {
+                                        CourseResponseDto courseDto = new CourseResponseDto();
+                                        courseDto.setId(course.getId());
+                                        courseDto.setCourseName(course.getCourseName());
+                                        return courseDto;
+                                    })).toList()
+                    );
                     return  studentDto;
                 }).toList();
         dto.setStudents(students);

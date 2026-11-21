@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,8 +23,6 @@ public class StudentRequestDto {
     @NotBlank(message = "email name is required")
     @Email(message = "please enter valid email")
     private String email;
-    @NotBlank(message = "course is required")
-    private String course;
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must contain at least 8 characters")
     @Pattern(
@@ -34,4 +34,7 @@ public class StudentRequestDto {
 
     @NotNull(message = "Department Id is required")
     private Long departmentId;
+
+    @NotEmpty(message = "At least one course required")
+    private List<Long> courseIds;
 }

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/courses")
+@RequestMapping("/api/courses")
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
@@ -40,7 +40,7 @@ public class CourseController {
                         true,
                         LocalDateTime.now(),
                         HttpStatus.OK.value(),
-                        "Course created successfully",
+                        "Course fetched successfully",
                         courseService.getAllCourses()
                 )
         );
@@ -53,7 +53,7 @@ public class CourseController {
                         true,
                         LocalDateTime.now(),
                         HttpStatus.OK.value(),
-                        "Course created successfully",
+                        "Course fetched successfully",
                         courseService.getCourseById(id)
                 )
         );
