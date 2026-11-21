@@ -6,16 +6,21 @@ import com.learnspringboot.dto.AddressResponseDto;
 import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
 import com.learnspringboot.entity.Address;
+import com.learnspringboot.entity.Department;
 import com.learnspringboot.entity.Student;
 import com.learnspringboot.exception.DuplicateEmailException;
+import com.learnspringboot.exception.ResourceNotFoundException;
 import com.learnspringboot.exception.StudentNotFoundException;
+import com.learnspringboot.repository.DepartmentRepository;
 import com.learnspringboot.repository.StudentRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
     // we can apply validation on three types
@@ -26,11 +31,12 @@ public class StudentServiceImpl implements StudentService {
     // first add dependency oky then work on this
 
     private final StudentRepository studentRepository;
+    private final DepartmentRepository departmentRepository;
 
     // Constructor injection
-    public StudentServiceImpl(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
+//    public StudentServiceImpl(StudentRepository studentRepository) {
+//        this.studentRepository = studentRepository;
+//    }
 
     @Override
     public StudentResponseDto saveStudent(StudentRequestDto dto) {
@@ -49,6 +55,13 @@ public class StudentServiceImpl implements StudentService {
         address.setState(dto.getAddress().getState());
         address.setCountry(dto.getAddress().getCountry());
 
+
+        // department entity
+        Department department = departmentRepository.findById(dto.getDepartmentId()).orElseThrow(() ->
+                new ResourceNotFoundException("Department Not found with id " + dto.getDepartmentId())
+        );
+
+
         // student entity
         Student student = new Student();
         student.setFirstName(dto.getFirstName());
@@ -58,6 +71,7 @@ public class StudentServiceImpl implements StudentService {
         student.setPassword(dto.getPassword());
         student.setCreatedAt(LocalDateTime.now());
         student.setAddress(address);
+        student.setDepartment(department);
 
         Student savedStudent = studentRepository.save(student);
 
@@ -114,6 +128,7 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setCourse(dto.getCourse());
         existingStudent.setPassword(dto.getPassword());
 
+        // address update
         Address address = existingStudent.getAddress();
         if (address == null) {
             address = new Address();
@@ -123,6 +138,13 @@ public class StudentServiceImpl implements StudentService {
         address.setCountry(dto.getAddress().getCountry());
         existingStudent.setCreatedAt(LocalDateTime.now());
         existingStudent.setAddress(address);
+
+        // department update
+
+        Department department = departmentRepository.findById(dto.getDepartmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department Not found with id " + dto.getDepartmentId())
+                );
+        existingStudent.setDepartment(department);
         Student updatedStudent = studentRepository.save(existingStudent);
 
         return mapToResponseDto(updatedStudent);
@@ -132,6 +154,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentResponseDto patchStudent(Long id, StudentRequestDto dto) {
 
+
+        // student path
         Student existingStudent = studentRepository.findById(id)
                 .orElseThrow(() ->
                         new StudentNotFoundException("Student not found with id: " + id));
@@ -158,23 +182,31 @@ public class StudentServiceImpl implements StudentService {
             existingStudent.setPassword(dto.getPassword());
         }
 
+        // address patch
+
         if (dto.getAddress() != null) {
-            Address address= existingStudent.getAddress();
-            if(address==null){
-                address=new Address();
+            Address address = existingStudent.getAddress();
+            if (address == null) {
+                address = new Address();
             }
-            if(dto.getAddress().getCity()!=null){
+            if (dto.getAddress().getCity() != null) {
                 address.setCity(dto.getAddress().getCity());
             }
-            if(dto.getAddress().getCountry()!=null){
+            if (dto.getAddress().getCountry() != null) {
                 address.setCountry(dto.getAddress().getCountry());
             }
-            if(dto.getAddress().getState()!=null){
+            if (dto.getAddress().getState() != null) {
                 address.setState(dto.getAddress().getState());
             }
             existingStudent.setAddress(address);
         }
 
+        // department path
+        if (dto.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(dto.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Department Not found with id " + dto.getDepartmentId()));
+            existingStudent.setDepartment(department);
+        }
 
 
         Student updatedStudent = studentRepository.save(existingStudent);
@@ -192,11 +224,12 @@ public class StudentServiceImpl implements StudentService {
         dto.setLastName(student.getLastName());
         dto.setEmail(student.getEmail());
         dto.setCourse(student.getCourse());
-        AddressResponseDto addressDto=new AddressResponseDto();
+        AddressResponseDto addressDto = new AddressResponseDto();
         addressDto.setCity(student.getAddress().getCity());
         addressDto.setCountry(student.getAddress().getCountry());
-        addressDto.setState(student.getAddress().getCountry());
-        dto.setAddress(student.getAddress());
+        addressDto.setState(student.getAddress().getState() );
+        dto.setAddress(addressDto);
+        dto.setDepartmentName(student.getDepartment().getDepartmentName());
         return dto;
     }
 }

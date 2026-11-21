@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -43,5 +45,13 @@ public class Student {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id") // we are keeping id in this table because to reduce data redudancy oky
     private Department department;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // owner side
+            @JoinTable(
+                    name = "student_courses",
+                    joinColumns=@JoinColumn(name = "student_id"),
+                    inverseJoinColumns = @JoinColumn(name = "course_id")
+            )
+    List<Course> courses =new ArrayList<>();
 
 }
