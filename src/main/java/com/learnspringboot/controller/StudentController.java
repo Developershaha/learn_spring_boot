@@ -63,6 +63,27 @@ public class StudentController {
         return ResponseEntity.ok(response);
     }
 
+    // GET STUDENT BY EMAIL ID
+    @GetMapping("/email/{email}")
+    public ResponseEntity<ApiResponse<StudentResponseDto>> getStudentByEmailId(
+            @PathVariable String email) {
+
+        StudentResponseDto student =
+                studentService.getStudentByEmail(email);
+
+        ApiResponse<StudentResponseDto> response =
+                new ApiResponse<>(
+                        true,
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Student fetched successfully By email",
+                        student
+                );
+
+        return ResponseEntity.ok(response);
+    }
+
+
     // CREATE STUDENT
     @PostMapping
     public ResponseEntity<ApiResponse<StudentResponseDto>> saveStudent(

@@ -132,7 +132,7 @@ public class StudentServiceImpl implements StudentService {
             address = new Address();
         }
         address.setCity(dto.getAddress().getCity());
-        address.setState(dto.getAddress().getState());
+                address.setState(dto.getAddress().getState());
         address.setCountry(dto.getAddress().getCountry());
         existingStudent.setCreatedAt(LocalDateTime.now());
         existingStudent.setAddress(address);
@@ -202,11 +202,21 @@ public class StudentServiceImpl implements StudentService {
                     .orElseThrow(() -> new ResourceNotFoundException("Department Not found with id " + dto.getDepartmentId()));
             existingStudent.setDepartment(department);
         }
-
-
         Student updatedStudent = studentRepository.save(existingStudent);
-
         return mapToResponseDto(updatedStudent);
+    }
+
+    @Override
+    public StudentResponseDto getStudentByEmail(String email) {
+
+        Student student = studentRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Student not found with email: " + email
+                        )
+                );
+
+        return mapToResponseDto(student);
     }
 
     // ENTITY TO RESPONSE DTO MAPPING

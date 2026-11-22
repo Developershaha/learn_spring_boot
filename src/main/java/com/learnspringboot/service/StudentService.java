@@ -19,4 +19,6 @@ public interface StudentService {
     StudentResponseDto updateStudent(Long id, StudentRequestDto dto);
 
     StudentResponseDto patchStudent(Long id, StudentRequestDto dto);
+
+    StudentResponseDto getStudentByEmail(String email);
 }
