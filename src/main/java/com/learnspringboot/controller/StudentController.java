@@ -64,9 +64,9 @@ public class StudentController {
     }
 
     // GET STUDENT BY EMAIL ID
-    @GetMapping("/email/{email}")
+    @GetMapping("/email")
     public ResponseEntity<ApiResponse<StudentResponseDto>> getStudentByEmailId(
-            @PathVariable String email) {
+            @RequestParam String email) {
 
         StudentResponseDto student =
                 studentService.getStudentByEmail(email);
