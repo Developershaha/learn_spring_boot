@@ -22,4 +22,5 @@ public interface  StudentService {
 
     StudentResponseDto getStudentByEmail(String email);
     Long countStudentsByCourseName(String courseName);
+    void deleteStudentByEmail(String email);
 }

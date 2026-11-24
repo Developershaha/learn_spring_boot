@@ -23,5 +23,6 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
         WHERE LOWER(c.courseName) = LOWER(:courseName)
     """)
 Long countStudentsByCourseName(@Param("courseName") String courseName);
+void deleteByEmail(String email);
 
 }

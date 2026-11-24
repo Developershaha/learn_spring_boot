@@ -224,6 +224,12 @@ public class StudentServiceImpl implements StudentService {
          return studentRepository.countStudentsByCourseName(courseName);
      }
 
+     @Override
+     public void deleteStudentByEmail(String email) {
+        studentRepository.deleteByEmail(email);
+
+     }
+
 
      // ENTITY TO RESPONSE DTO MAPPING
     private StudentResponseDto mapToResponseDto(Student student) {

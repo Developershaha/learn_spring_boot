@@ -181,4 +181,18 @@ public class StudentController {
         );
 
     }
+
+    @DeleteMapping("/email/{email}")
+    public ResponseEntity<ApiResponse<String>> deleteStudentByEmail(@PathVariable String email){
+        studentService.deleteStudentByEmail(email);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Student deleted successfully ",
+                        null
+                )
+        );
+    }
 }
