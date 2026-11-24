@@ -6,7 +6,7 @@ import com.learnspringboot.dto.StudentResponseDto;
 
 import java.util.List;
 
-public interface StudentService {
+public interface  StudentService {
 
     StudentResponseDto saveStudent(StudentRequestDto dto);
 
@@ -21,4 +21,5 @@ public interface StudentService {
     StudentResponseDto patchStudent(Long id, StudentRequestDto dto);
 
     StudentResponseDto getStudentByEmail(String email);
+    Long countStudentsByCourseName(String courseName);
 }

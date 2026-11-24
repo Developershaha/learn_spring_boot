@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Service
+ @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
@@ -219,7 +219,13 @@ public class StudentServiceImpl implements StudentService {
         return mapToResponseDto(student);
     }
 
-    // ENTITY TO RESPONSE DTO MAPPING
+     @Override
+     public Long countStudentsByCourseName(String courseName) {
+         return studentRepository.countStudentsByCourseName(courseName);
+     }
+
+
+     // ENTITY TO RESPONSE DTO MAPPING
     private StudentResponseDto mapToResponseDto(Student student) {
 
         StudentResponseDto dto = new StudentResponseDto();

@@ -7,6 +7,7 @@ import com.learnspringboot.payload.ApiResponse;
 import com.learnspringboot.service.StudentService;
 
 import jakarta.validation.Valid;
+import org.aspectj.apache.bcel.generic.LOOKUPSWITCH;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -163,5 +164,21 @@ public class StudentController {
                 );
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<ApiResponse> getStudentByCourse(@RequestParam String courseName){
+
+        Long count=studentService.countStudentsByCourseName(courseName);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Student count feched sucessfully",
+                        count
+                )
+        );
+
     }
 }

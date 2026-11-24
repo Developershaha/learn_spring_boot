@@ -22,8 +22,6 @@ public class Student {
     private String firstName;
     private String lastName;
     private String email;
-    private String course;
-
     // no need to show to password to the end user
 
     //dto transfer only required data oky no need to show all the data
