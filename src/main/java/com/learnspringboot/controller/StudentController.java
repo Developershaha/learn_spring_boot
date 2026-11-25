@@ -208,4 +208,9 @@ public class StudentController {
         StudentResponseDto studentResponseDto=studentService.getStudentByEmailNative(email);
         return ResponseEntity.ok(studentResponseDto);
     }
+
+    @GetMapping("/sorted")
+    public ResponseEntity<List<StudentResponseDto>> getSortedStudent(){
+        return ResponseEntity.ok(studentService.getAllStudentSortedByFirstName());
+    }
 }

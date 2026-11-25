@@ -25,4 +25,6 @@ public interface  StudentService {
     void deleteStudentByEmail(String email);
     List<StudentResponseDto>getStudentFirstNameAndCourse(String firstName,String course);
     StudentResponseDto getStudentByEmailNative(String email);
+
+    List<StudentResponseDto> getAllStudentSortedByFirstName();
 }

@@ -13,12 +13,13 @@ import com.learnspringboot.repository.CourseRepository;
 import com.learnspringboot.repository.DepartmentRepository;
 import com.learnspringboot.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
- @Service
+@Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
@@ -58,7 +59,7 @@ public class StudentServiceImpl implements StudentService {
 
         // Course Entity
 
-        List<Course> courses=courseRepository.findAllById(dto.getCourseIds());
+        List<Course> courses = courseRepository.findAllById(dto.getCourseIds());
 
 
         // student entity
@@ -132,7 +133,7 @@ public class StudentServiceImpl implements StudentService {
             address = new Address();
         }
         address.setCity(dto.getAddress().getCity());
-                address.setState(dto.getAddress().getState());
+        address.setState(dto.getAddress().getState());
         address.setCountry(dto.getAddress().getCountry());
         existingStudent.setCreatedAt(LocalDateTime.now());
         existingStudent.setAddress(address);
@@ -219,34 +220,48 @@ public class StudentServiceImpl implements StudentService {
         return mapToResponseDto(student);
     }
 
-     @Override
-     public Long countStudentsByCourseName(String courseName) {
-         return studentRepository.countStudentsByCourseName(courseName);
-     }
+    @Override
+    public Long countStudentsByCourseName(String courseName) {
+        return studentRepository.countStudentsByCourseName(courseName);
+    }
 
-     @Override
-     public void deleteStudentByEmail(String email) {
+    @Override
+    public void deleteStudentByEmail(String email) {
         studentRepository.deleteByEmail(email);
 
-     }
+    }
 
-     @Override
-     public List<StudentResponseDto> getStudentFirstNameAndCourse(String firstName, String course) {
-        List<Student> students=studentRepository.findByFirstNameAndCourses(firstName,course);
+    @Override
+    public List<StudentResponseDto> getStudentFirstNameAndCourse(String firstName, String course) {
+        List<Student> students = studentRepository.findByFirstNameAndCourses(firstName, course);
         return students.stream()
                 .map(this::mapToResponseDto)
                 .toList();
-     }
+    }
 
-     @Override
-     public StudentResponseDto getStudentByEmailNative(String email) {
-       Student student= studentRepository.findStudentByEmailNative(email).orElseThrow(()->
-                new StudentNotFoundException("Student not found exception "+email));
-       return mapToResponseDto(student);
-     }
+    @Override
+    public StudentResponseDto getStudentByEmailNative(String email) {
+        Student student = studentRepository.findStudentByEmailNative(email).orElseThrow(() ->
+                new StudentNotFoundException("Student not found exception " + email));
+        return mapToResponseDto(student);
+    }
+
+    @Override
+    public List<StudentResponseDto> getAllStudentSortedByFirstName() {
+
+        Sort sort=Sort.by("firstName")
+                .and(Sort.by("lastName"));
+        List<Student> students = studentRepository.findAll( sort
+//                Sort.by("id").ascending()// it return  asc bydefault // multiple field sorting
+        );
+        return students.stream()
+                .map(this::mapToResponseDto)
+                .toList();
+
+    }
 
 
-     // ENTITY TO RESPONSE DTO MAPPING
+    // ENTITY TO RESPONSE DTO MAPPING
     private StudentResponseDto mapToResponseDto(Student student) {
 
         StudentResponseDto dto = new StudentResponseDto();
@@ -258,7 +273,7 @@ public class StudentServiceImpl implements StudentService {
         AddressResponseDto addressDto = new AddressResponseDto();
         addressDto.setCity(student.getAddress().getCity());
         addressDto.setCountry(student.getAddress().getCountry());
-        addressDto.setState(student.getAddress().getState() );
+        addressDto.setState(student.getAddress().getState());
         dto.setAddress(addressDto);
         dto.setDepartmentName(student.getDepartment().getDepartmentName());
         dto.setCourses(
