@@ -4,6 +4,7 @@ package com.learnspringboot.controller;
 import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
 import com.learnspringboot.payload.ApiResponse;
+import com.learnspringboot.projection.StudentProjection;
 import com.learnspringboot.service.StudentService;
 
 import jakarta.validation.Valid;
@@ -169,9 +170,9 @@ public class StudentController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<ApiResponse> getStudentByCourse(@RequestParam String courseName){
+    public ResponseEntity<ApiResponse> getStudentByCourse(@RequestParam String courseName) {
 
-        Long count=studentService.countStudentsByCourseName(courseName);
+        Long count = studentService.countStudentsByCourseName(courseName);
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
@@ -185,7 +186,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/email/{email}")
-    public ResponseEntity<ApiResponse<String>> deleteStudentByEmail(@PathVariable String email){
+    public ResponseEntity<ApiResponse<String>> deleteStudentByEmail(@PathVariable String email) {
         studentService.deleteStudentByEmail(email);
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -197,24 +198,27 @@ public class StudentController {
                 )
         );
     }
+
     @GetMapping("/search")
-    public ResponseEntity<List<StudentResponseDto>> getStudents(@RequestParam String firstName,@RequestParam String course){
+    public ResponseEntity<List<StudentResponseDto>> getStudents(@RequestParam String firstName, @RequestParam String course) {
 
 
         return ResponseEntity.ok(
-                studentService.getStudentFirstNameAndCourse(firstName,course)
+                studentService.getStudentFirstNameAndCourse(firstName, course)
         );
     }
+
     @GetMapping("/native/email/{email}")
-    public ResponseEntity<StudentResponseDto> getStudentBYEmailNative(@PathVariable String email){
-        StudentResponseDto studentResponseDto=studentService.getStudentByEmailNative(email);
+    public ResponseEntity<StudentResponseDto> getStudentBYEmailNative(@PathVariable String email) {
+        StudentResponseDto studentResponseDto = studentService.getStudentByEmailNative(email);
         return ResponseEntity.ok(studentResponseDto);
     }
 
     @GetMapping("/sorted")
-    public ResponseEntity<List<StudentResponseDto>> getSortedStudent(){
+    public ResponseEntity<List<StudentResponseDto>> getSortedStudent() {
         return ResponseEntity.ok(studentService.getAllStudentSortedByFirstName());
     }
+
     @GetMapping("/pagination")
     public ResponseEntity<Page<StudentResponseDto>> getStudents(Pageable pageable) {
 
@@ -222,5 +226,10 @@ public class StudentController {
                 studentService.getStudent(pageable);
 
         return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/projection")
+    public ResponseEntity<List<StudentProjection>> getStudentProjection() {
+        return ResponseEntity.ok(studentService.getStudentProjection());
     }
 }

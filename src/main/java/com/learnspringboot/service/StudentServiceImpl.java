@@ -9,6 +9,7 @@ import com.learnspringboot.entity.Student;
 import com.learnspringboot.exception.DuplicateEmailException;
 import com.learnspringboot.exception.ResourceNotFoundException;
 import com.learnspringboot.exception.StudentNotFoundException;
+import com.learnspringboot.projection.StudentProjection;
 import com.learnspringboot.repository.CourseRepository;
 import com.learnspringboot.repository.DepartmentRepository;
 import com.learnspringboot.repository.StudentRepository;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Service
+  @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
@@ -273,8 +274,13 @@ public class StudentServiceImpl implements StudentService {
         return students.map(this::mapToResponseDto);
     }
 
+      @Override
+      public List<StudentProjection> getStudentProjection() {
+          return studentRepository.findBy();
+      }
 
-    // ENTITY TO RESPONSE DTO MAPPING
+
+      // ENTITY TO RESPONSE DTO MAPPING
     private StudentResponseDto mapToResponseDto(Student student) {
 
         StudentResponseDto dto = new StudentResponseDto();

@@ -1,6 +1,7 @@
 package com.learnspringboot.repository;
 
 import com.learnspringboot.entity.Student;
+import com.learnspringboot.projection.StudentProjection;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,5 +34,7 @@ List<Student> findByFirstNameAndCourses(String firstName,String courses);
     @Query(value = "SELECT * FROM students WHERE email=:email", // work on database not on objects oky
     nativeQuery = true)
     Optional<Student> findStudentByEmailNative(@Param("email")String email);
+
+    List<StudentProjection> findBy();
 
 }
