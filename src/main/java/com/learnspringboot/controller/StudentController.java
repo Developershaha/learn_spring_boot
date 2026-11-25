@@ -9,6 +9,7 @@ import com.learnspringboot.service.StudentService;
 import jakarta.validation.Valid;
 import org.aspectj.apache.bcel.generic.LOOKUPSWITCH;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -215,12 +216,10 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAllStudentSortedByFirstName());
     }
     @GetMapping("/pagination")
-    public ResponseEntity<Page<StudentResponseDto>> getStudents(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+    public ResponseEntity<Page<StudentResponseDto>> getStudents(Pageable pageable) {
 
         Page<StudentResponseDto> students =
-                studentService.getStudent(page, size);
+                studentService.getStudent(pageable);
 
         return ResponseEntity.ok(students);
     }

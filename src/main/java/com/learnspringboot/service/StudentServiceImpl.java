@@ -264,12 +264,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Page<StudentResponseDto> getStudent(int page, int size) {
+    public Page<StudentResponseDto> getStudent(Pageable pageable) {
 
-        Pageable pageable = PageRequest.of(page, size,Sort.by("firstName").descending());
+//        Pageable pageable = PageRequest.of(page, size,Sort.by("firstName").descending());
+        // hardcoding sorting
 
         Page<Student> students = studentRepository.findAll(pageable);
-
         return students.map(this::mapToResponseDto);
     }
 
