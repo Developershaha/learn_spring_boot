@@ -8,6 +8,7 @@ import com.learnspringboot.service.StudentService;
 
 import jakarta.validation.Valid;
 import org.aspectj.apache.bcel.generic.LOOKUPSWITCH;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -212,5 +213,15 @@ public class StudentController {
     @GetMapping("/sorted")
     public ResponseEntity<List<StudentResponseDto>> getSortedStudent(){
         return ResponseEntity.ok(studentService.getAllStudentSortedByFirstName());
+    }
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<StudentResponseDto>> getStudents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Page<StudentResponseDto> students =
+                studentService.getStudent(page, size);
+
+        return ResponseEntity.ok(students);
     }
 }

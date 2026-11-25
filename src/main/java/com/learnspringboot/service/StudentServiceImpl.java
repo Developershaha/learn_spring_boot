@@ -13,6 +13,9 @@ import com.learnspringboot.repository.CourseRepository;
 import com.learnspringboot.repository.DepartmentRepository;
 import com.learnspringboot.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -249,15 +252,25 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentResponseDto> getAllStudentSortedByFirstName() {
 
-        Sort sort=Sort.by("firstName")
-                .and(Sort.by("lastName"));
-        List<Student> students = studentRepository.findAll( sort
-//                Sort.by("id").ascending()// it return  asc bydefault // multiple field sorting
+        Sort sort = Sort.by("firstName").ascending()
+                .and(Sort.by("lastName").descending());
+        List<Student> students = studentRepository.findAll(sort
+//                Sort.by("id").ascending()// it return  asc by default // multiple field sorting
         );
         return students.stream()
                 .map(this::mapToResponseDto)
                 .toList();
 
+    }
+
+    @Override
+    public Page<StudentResponseDto> getStudent(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size,Sort.by("firstName").descending());
+
+        Page<Student> students = studentRepository.findAll(pageable);
+
+        return students.map(this::mapToResponseDto);
     }
 
 

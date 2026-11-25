@@ -3,6 +3,7 @@ package com.learnspringboot.service;
 
 import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -27,4 +28,5 @@ public interface  StudentService {
     StudentResponseDto getStudentByEmailNative(String email);
 
     List<StudentResponseDto> getAllStudentSortedByFirstName();
-}
+
+    Page<StudentResponseDto> getStudent(int page, int size);}
