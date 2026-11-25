@@ -195,4 +195,17 @@ public class StudentController {
                 )
         );
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<StudentResponseDto>> getStudents(@RequestParam String firstName,@RequestParam String course){
+
+
+        return ResponseEntity.ok(
+                studentService.getStudentFirstNameAndCourse(firstName,course)
+        );
+    }
+    @GetMapping("/native/email/{email}")
+    public ResponseEntity<StudentResponseDto> getStudentBYEmailNative(@PathVariable String email){
+        StudentResponseDto studentResponseDto=studentService.getStudentByEmailNative(email);
+        return ResponseEntity.ok(studentResponseDto);
+    }
 }

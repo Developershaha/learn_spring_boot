@@ -230,6 +230,21 @@ public class StudentServiceImpl implements StudentService {
 
      }
 
+     @Override
+     public List<StudentResponseDto> getStudentFirstNameAndCourse(String firstName, String course) {
+        List<Student> students=studentRepository.findByFirstNameAndCourses(firstName,course);
+        return students.stream()
+                .map(this::mapToResponseDto)
+                .toList();
+     }
+
+     @Override
+     public StudentResponseDto getStudentByEmailNative(String email) {
+       Student student= studentRepository.findStudentByEmailNative(email).orElseThrow(()->
+                new StudentNotFoundException("Student not found exception "+email));
+       return mapToResponseDto(student);
+     }
+
 
      // ENTITY TO RESPONSE DTO MAPPING
     private StudentResponseDto mapToResponseDto(Student student) {

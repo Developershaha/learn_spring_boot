@@ -23,4 +23,6 @@ public interface  StudentService {
     StudentResponseDto getStudentByEmail(String email);
     Long countStudentsByCourseName(String courseName);
     void deleteStudentByEmail(String email);
+    List<StudentResponseDto>getStudentFirstNameAndCourse(String firstName,String course);
+    StudentResponseDto getStudentByEmailNative(String email);
 }
