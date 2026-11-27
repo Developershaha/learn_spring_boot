@@ -1,6 +1,7 @@
 
 package com.learnspringboot.service;
 
+import com.learnspringboot.dto.StudentProjectionDto;
 import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
 import com.learnspringboot.projection.StudentProjection;
@@ -32,5 +33,5 @@ public interface   StudentService {
     List<StudentResponseDto> getAllStudentSortedByFirstName();
 
     Page<StudentResponseDto> getStudent(Pageable pageable);
-    List<StudentProjection> getStudentProjection();
+    List<StudentProjectionDto> findAllStudentProjections();
 }

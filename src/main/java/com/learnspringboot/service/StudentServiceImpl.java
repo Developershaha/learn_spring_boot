@@ -275,8 +275,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
       @Override
-      public List<StudentProjection> getStudentProjection() {
-          return studentRepository.findBy();
+      public List<StudentProjectionDto> findAllStudentProjections() {
+          return studentRepository.findAllStudentProjections();
       }
 
 

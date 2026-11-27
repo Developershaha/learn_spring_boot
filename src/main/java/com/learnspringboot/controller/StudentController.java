@@ -1,6 +1,7 @@
 
 package com.learnspringboot.controller;
 
+import com.learnspringboot.dto.StudentProjectionDto;
 import com.learnspringboot.dto.StudentRequestDto;
 import com.learnspringboot.dto.StudentResponseDto;
 import com.learnspringboot.payload.ApiResponse;
@@ -229,7 +230,7 @@ public class StudentController {
     }
 
     @GetMapping("/projection")
-    public ResponseEntity<List<StudentProjection>> getStudentProjection() {
-        return ResponseEntity.ok(studentService.getStudentProjection());
+    public ResponseEntity<List<StudentProjectionDto>> getStudentProjection() {
+        return ResponseEntity.ok(studentService.findAllStudentProjections());
     }
 }

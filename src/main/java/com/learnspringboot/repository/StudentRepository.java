@@ -1,5 +1,6 @@
 package com.learnspringboot.repository;
 
+import com.learnspringboot.dto.StudentProjectionDto;
 import com.learnspringboot.entity.Student;
 import com.learnspringboot.projection.StudentProjection;
 import jakarta.validation.Valid;
@@ -36,5 +37,15 @@ List<Student> findByFirstNameAndCourses(String firstName,String courses);
     Optional<Student> findStudentByEmailNative(@Param("email")String email);
 
     List<StudentProjection> findBy();
+
+    @Query("""
+    SELECT new com.learnspringboot.dto.StudentProjectionDto(
+        s.firstName,
+        s.lastName,
+        s.email
+    )
+    FROM Student s
+""")
+    List<StudentProjectionDto> findAllStudentProjections();
 
 }
