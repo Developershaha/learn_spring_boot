@@ -233,4 +233,26 @@ public class StudentController {
     public ResponseEntity<List<StudentProjectionDto>> getStudentProjection() {
         return ResponseEntity.ok(studentService.findAllStudentProjections());
     }
+    @GetMapping("/search/specification")
+    public ResponseEntity<ApiResponse<List<StudentResponseDto>>> searchStudents(
+
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String course
+
+    ) {
+
+        List<StudentResponseDto> students =
+                studentService.searchStudents(firstName, email, course);
+
+        ApiResponse<List<StudentResponseDto>> response = new ApiResponse<>(
+                true,
+                LocalDateTime.now(),
+                HttpStatus.OK.value(),
+                "Students fetched successfully",
+                students
+        );
+
+        return ResponseEntity.ok(response);
+    }
 }

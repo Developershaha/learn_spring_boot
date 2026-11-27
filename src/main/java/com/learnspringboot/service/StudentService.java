@@ -34,4 +34,7 @@ public interface   StudentService {
 
     Page<StudentResponseDto> getStudent(Pageable pageable);
     List<StudentProjectionDto> findAllStudentProjections();
+
+    //
+    public List<StudentResponseDto> searchStudents(String firstName,String email,String course);
 }

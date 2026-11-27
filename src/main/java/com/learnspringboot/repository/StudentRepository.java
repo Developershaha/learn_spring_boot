@@ -6,6 +6,7 @@ import com.learnspringboot.projection.StudentProjection;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student,Long> {
+public interface StudentRepository extends JpaRepository<Student,Long> , JpaSpecificationExecutor<Student> {
     boolean existsByEmail(String email);
     // write derived query
     Optional<Student> findByEmail(String email);

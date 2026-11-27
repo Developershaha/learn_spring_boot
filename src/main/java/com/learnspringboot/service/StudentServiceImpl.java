@@ -13,11 +13,13 @@ import com.learnspringboot.projection.StudentProjection;
 import com.learnspringboot.repository.CourseRepository;
 import com.learnspringboot.repository.DepartmentRepository;
 import com.learnspringboot.repository.StudentRepository;
+import com.learnspringboot.specification.StudentSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -279,6 +281,24 @@ public class StudentServiceImpl implements StudentService {
           return studentRepository.findAllStudentProjections();
       }
 
+      @Override
+      public List<StudentResponseDto> searchStudents(
+              String firstName,
+              String email,
+              String course) {
+
+          Specification<Student> specification = Specification.allOf(
+                  StudentSpecification.hasFirstName(firstName),
+                  StudentSpecification.hasEmail(email),
+                  StudentSpecification.hasCourse(course)
+          );
+
+          List<Student> students = studentRepository.findAll(specification);
+
+          return students.stream()
+                  .map(this::mapToResponseDto)
+                  .toList();
+      }
 
       // ENTITY TO RESPONSE DTO MAPPING
     private StudentResponseDto mapToResponseDto(Student student) {
